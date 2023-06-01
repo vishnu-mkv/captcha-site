@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Captcha Generator</title>
+    <script src="./script.js"></script>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #f2f2f2;
+      }
+      #container {
+        max-width: 400px;
+        margin: 0 auto;
+        padding: 20px;
+        background-color: #fff;
+        border-radius: 5px;
+        box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+      }
+      h1 {
+        text-align: center;
+        color: #333;
+      }
+      #captcha {
+        font-size: 30px;
+        font-weight: bold;
+        letter-spacing: 3px;
+        text-align: center;
+        margin-bottom: 20px;
+        padding: 10px;
+        text-decoration: line-through;
+      }
+      #input {
+        width: 100%;
+        padding: 10px;
+        font-size: 16px;
+        border: 1px solid #ccc;
+        border-radius: 3px;
+        box-sizing: border-box;
+        margin-bottom: 20px;
+      }
+      #verify-button,
+      #change-button {
+        width: 100%;
+        padding: 10px;
+        background-color: #333;
+        color: #fff;
+        font-size: 16px;
+        border: none;
+        border-radius: 3px;
+        cursor: pointer;
+      }
+
+      #change-button {
+        background-color: #1c60ea;
+      }
+
+      #verify-button:hover {
+        background-color: #555;
+      }
+      #message {
+        font-weight: bold;
+        margin-top: 10px;
+        text-align: center;
+        color: #ffffff;
+        font-size: 14px;
+        padding: 10px;
+      }
+      #message.success {
+        background-color: #008000;
+      }
+      #message.error {
+        background-color: #ff0000;
+      }
+
+      .flex {
+        display: flex;
+        justify-content: space-between;
+        gap: 1em;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="container">
+      <h1>Captcha Generator</h1>
+      <div id="captcha"></div>
+      <input type="text" id="input" placeholder="Enter the captcha" />
+      <div class="flex">
+        <button id="verify-button" onclick="verifyCaptcha()">Verify</button>
+        <button id="change-button" onclick="generateCaptcha()">Refresh</button>
+      </div>
+      <p id="message"></p>
+    </div>
+
+    <script defer>
+      function generateCaptcha() {
+        var captcha = generateRandomString(6);
+        const tag = document.getElementById("captcha");
+        tag.innerText = captcha;
+        const color = randomColor();
+        tag.style.color = color;
+        tag.style.backgroundColor = getTextColorFromBackground(color);
+        tag.style.opacity = (Math.random() * 0.2 + 0.6) % 1;
+      }
+
+      // Generate a random string with uppercase and lowercase letters
+      function generateRandomString(length) {
+        var chars =
+          "abcdefghijklmnopqrstuvwxyz1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        var randomString = "";
+        for (var i = 0; i < length; i++) {
+          var randomIndex = Math.floor(Math.random() * chars.length);
+          randomString += chars.charAt(randomIndex);
+        }
+        return randomString;
+      }
+
+      // Verify the user input
+      function verifyCaptcha() {
+        var userInput = document.getElementById("input").value;
+        var captcha = document.getElementById("captcha").innerText;
+
+        if (userInput === captcha) {
+          document.getElementById("message").innerText = "Captcha verified!";
+          document.getElementById("message").className = "success";
+          generateCaptcha();
+        } else {
+          document.getElementById("message").innerText =
+            "Incorrect captcha. Please try again.";
+          document.getElementById("message").className = "error";
+        }
+
+        // Generate a new captcha after verification
+        // Clear the input field
+        document.getElementById("input").value = "";
+      }
+
+      // Generate the initial captcha on page load
+      generateCaptcha();
+    </script>
+  </body>
+</html>
